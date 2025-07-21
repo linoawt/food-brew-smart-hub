@@ -1,14 +1,28 @@
-import { ShoppingCart, Search, MapPin, User } from "lucide-react";
+import { Search, MapPin, ShoppingCart, User, LogOut, Settings } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 
 const Header = () => {
+  const { user, profile, signOut } = useAuth();
+  const { getTotalItems } = useCart();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
+
   return (
     <header className="bg-card shadow-card sticky top-0 z-50 backdrop-blur-sm bg-card/90">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2">
             <div className="w-10 h-10 bg-gradient-hero rounded-full flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-lg">SP</span>
             </div>
@@ -16,7 +30,7 @@ const Header = () => {
               <h1 className="text-xl font-bold text-foreground">SmartPortal</h1>
               <p className="text-xs text-muted-foreground">Food & Brewery Hub</p>
             </div>
-          </div>
+          </Link>
 
           {/* Search Bar */}
           <div className="flex-1 max-w-md mx-8">
@@ -36,17 +50,46 @@ const Header = () => {
               <span className="text-sm hidden md:block">Delivery</span>
             </div>
             
-            <Button variant="ghost" size="icon" className="relative">
-              <ShoppingCart className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                3
-              </span>
-            </Button>
+            <Link to="/cart">
+              <Button variant="ghost" size="icon" className="relative">
+                <ShoppingCart className="w-5 h-5" />
+                {getTotalItems() > 0 && (
+                  <Badge className="absolute -top-1 -right-1 w-5 h-5 p-0 flex items-center justify-center text-xs">
+                    {getTotalItems()}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
             
-            <Button variant="outline" size="sm" className="hidden md:flex">
-              <User className="w-4 h-4 mr-1" />
-              Sign In
-            </Button>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="hidden md:flex">
+                    <User className="w-4 h-4 mr-1" />
+                    {profile?.full_name || user.email}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {profile?.role && ['admin', 'vendor'].includes(profile.role) && (
+                    <DropdownMenuItem onClick={() => navigate('/dashboard')}>
+                      <Settings className="w-4 h-4 mr-2" />
+                      Dashboard
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link to="/auth">
+                <Button variant="outline" size="sm" className="hidden md:flex">
+                  <User className="w-4 h-4 mr-1" />
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>
