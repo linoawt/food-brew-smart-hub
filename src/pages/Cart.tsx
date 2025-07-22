@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -21,6 +22,7 @@ const Cart = () => {
   const { items, updateQuantity, removeFromCart, getTotalPrice, getVendorId } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [vendor, setVendor] = useState<Vendor | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -52,7 +54,11 @@ const Cart = () => {
     }
 
     if (vendor && subtotal < vendor.min_order) {
-      alert(`Minimum order amount is $${vendor.min_order.toFixed(2)}`);
+      toast({
+        title: "Minimum order not met",
+        description: `Minimum order amount is $${vendor.min_order.toFixed(2)}`,
+        variant: "destructive"
+      });
       return;
     }
 
