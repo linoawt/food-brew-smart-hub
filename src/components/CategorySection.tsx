@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Pizza, Coffee, Wine, Utensils } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const categories = [
   {
@@ -37,8 +38,15 @@ const categories = [
 ];
 
 const CategorySection = () => {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (categoryName: string) => {
+    // Navigate to vendors filtered by category
+    navigate(`/vendor/1?category=${encodeURIComponent(categoryName)}`);
+  };
+
   return (
-    <section className="py-16 bg-gradient-card">
+    <section id="categories" className="py-16 bg-gradient-card">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-foreground mb-4">
@@ -54,6 +62,7 @@ const CategorySection = () => {
             <Card 
               key={category.id} 
               className="group hover:shadow-elegant transition-all duration-300 hover:-translate-y-2 cursor-pointer border-border/50"
+              onClick={() => handleCategoryClick(category.name)}
             >
               <CardContent className="p-6 text-center">
                 <div className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>

@@ -1,8 +1,26 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Star, Clock, Truck } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-food-brewery.jpg";
 
 const Hero = () => {
+  const navigate = useNavigate();
+
+  const handleOrderNow = () => {
+    // Navigate to vendors list or first vendor
+    navigate('/vendor/1');
+  };
+
+  const handleBrowseMenu = () => {
+    // Scroll to category section or navigate to vendors
+    const categorySection = document.getElementById('categories');
+    if (categorySection) {
+      categorySection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate('/vendor/1');
+    }
+  };
+
   return (
     <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
       {/* Background Image */}
@@ -29,11 +47,21 @@ const Hero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button variant="hero" size="lg" className="text-lg px-8 py-4">
+            <Button 
+              variant="hero" 
+              size="lg" 
+              className="text-lg px-8 py-4"
+              onClick={handleOrderNow}
+            >
               Order Now
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
-            <Button variant="outline" size="lg" className="bg-white/10 border-white/30 text-white hover:bg-white/20 text-lg px-8 py-4">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="bg-white/10 border-white/30 text-white hover:bg-white/20 text-lg px-8 py-4"
+              onClick={handleBrowseMenu}
+            >
               Browse Menu
             </Button>
           </div>
