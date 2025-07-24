@@ -13,6 +13,7 @@ import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import Dashboard from "./pages/Dashboard";
 import UserDashboard from "./pages/UserDashboard";
+import VendorRegistration from "./pages/VendorRegistration";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 
@@ -47,8 +48,13 @@ const App = () => (
                 </ProtectedRoute>
               } />
               <Route path="/dashboard" element={
-                <ProtectedRoute requiredRole={['admin', 'vendor']}>
+                <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/vendor-registration" element={
+                <ProtectedRoute>
+                  <VendorRegistration />
                 </ProtectedRoute>
               } />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

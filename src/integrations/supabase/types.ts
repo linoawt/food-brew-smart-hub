@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string
@@ -176,6 +206,9 @@ export type Database = {
           role: string | null
           updated_at: string
           user_id: string
+          vendor_application_status: string | null
+          vendor_business_name: string | null
+          vendor_description: string | null
         }
         Insert: {
           address?: string | null
@@ -187,6 +220,9 @@ export type Database = {
           role?: string | null
           updated_at?: string
           user_id: string
+          vendor_application_status?: string | null
+          vendor_business_name?: string | null
+          vendor_description?: string | null
         }
         Update: {
           address?: string | null
@@ -198,6 +234,9 @@ export type Database = {
           role?: string | null
           updated_at?: string
           user_id?: string
+          vendor_application_status?: string | null
+          vendor_business_name?: string | null
+          vendor_description?: string | null
         }
         Relationships: []
       }
@@ -251,6 +290,7 @@ export type Database = {
       }
       vendors: {
         Row: {
+          approval_status: string | null
           category: string
           created_at: string
           delivery_fee: number | null
@@ -265,6 +305,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          approval_status?: string | null
           category: string
           created_at?: string
           delivery_fee?: number | null
@@ -279,6 +320,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          approval_status?: string | null
           category?: string
           created_at?: string
           delivery_fee?: number | null

@@ -11,6 +11,9 @@ interface Profile {
   phone: string | null;
   address: string | null;
   role: string;
+  vendor_application_status?: string | null;
+  vendor_business_name?: string | null;
+  vendor_description?: string | null;
 }
 
 interface AuthContextType {
