@@ -7,8 +7,8 @@ const Hero = () => {
   const navigate = useNavigate();
 
   const handleOrderNow = () => {
-    // Navigate to vendors list or first vendor
-    navigate('/vendor/1');
+    // Navigate to vendors list
+    navigate('/vendors');
   };
 
   const handleBrowseMenu = () => {
@@ -17,7 +17,7 @@ const Hero = () => {
     if (categorySection) {
       categorySection.scrollIntoView({ behavior: 'smooth' });
     } else {
-      navigate('/vendor/1');
+      navigate('/vendors');
     }
   };
 
@@ -63,6 +63,14 @@ const Hero = () => {
               onClick={handleBrowseMenu}
             >
               Browse Menu
+            </Button>
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="bg-white/10 border-white/30 text-white hover:bg-white/20 text-lg px-8 py-4"
+              onClick={() => navigate('/auth')}
+            >
+              Get Started
             </Button>
           </div>
           

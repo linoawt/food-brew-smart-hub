@@ -69,11 +69,17 @@ const Auth = () => {
       
       if (error) {
         toast({
-          title: "Error",
-          description: error.message,
+          title: "Google Auth Unavailable",
+          description: "Google authentication is not configured. Please use email/password to sign in.",
           variant: "destructive",
         });
       }
+    } catch (err) {
+      toast({
+        title: "Google Auth Unavailable", 
+        description: "Google authentication is not configured. Please use email/password to sign in.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
