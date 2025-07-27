@@ -1,11 +1,12 @@
-import { Search, MapPin, ShoppingCart, User, LogOut, Settings } from "lucide-react";
+
+import { MapPin, ShoppingCart, User, LogOut, Settings } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
+import SearchFunctionality from "./SearchFunctionality";
 
 const Header = () => {
   const { user, profile, signOut } = useAuth();
@@ -32,20 +33,9 @@ const Header = () => {
             </div>
           </Link>
 
-          {/* Search Bar */}
+          {/* Enhanced Search Bar */}
           <div className="flex-1 max-w-md mx-8">
-            <div className="relative flex">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                <Input 
-                  placeholder="Search for food, drinks, or vendors..." 
-                  className="pl-10 pr-4 bg-muted/50 border-border focus:bg-background transition-colors rounded-r-none"
-                />
-              </div>
-              <Button variant="outline" className="rounded-l-none border-l-0">
-                <Search className="w-4 h-4" />
-              </Button>
-            </div>
+            <SearchFunctionality />
           </div>
 
           {/* Right Actions */}
@@ -75,10 +65,14 @@ const Header = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => navigate('/my-dashboard')}>
+                    <User className="w-4 h-4 mr-2" />
+                    My Dashboard
+                  </DropdownMenuItem>
                   {profile?.role && ['admin', 'vendor'].includes(profile.role) && (
                     <DropdownMenuItem onClick={() => navigate('/dashboard')}>
                       <Settings className="w-4 h-4 mr-2" />
-                      Dashboard
+                      {profile.role === 'admin' ? 'Admin Panel' : 'Vendor Dashboard'}
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuItem onClick={handleSignOut}>

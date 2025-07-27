@@ -1,9 +1,11 @@
+
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -15,6 +17,8 @@ const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [role, setRole] = useState('customer');
   const [loading, setLoading] = useState(false);
   const { signIn, signUp, user } = useAuth();
   const { toast } = useToast();
@@ -48,10 +52,63 @@ const Auth = () => {
           setIsResetPassword(false);
         }
       } else if (isLogin) {
-        await signIn(email, password);
+        const result = await signIn(email, password);
+        if (!result.error) {
+          // Redirect based on role after successful login
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+            .single();
+          
+          if (profile?.role === 'vendor') {
+            window.location.href = '/dashboard';
+          } else {
+            window.location.href = '/';
+          }
+        }
       } else {
-        await signUp(email, password, fullName);
+        // Enhanced signup with role and phone
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/`,
+            data: {
+              full_name: fullName,
+              phone: phone,
+              role: role,
+            }
+          }
+        });
+
+        if (error) {
+          toast({
+            title: "Error",
+            description: error.message,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Success",
+            description: "Account created successfully! Please check your email to verify your account.",
+          });
+          
+          // Redirect based on role
+          if (role === 'vendor') {
+            toast({
+              title: "Vendor Registration",
+              description: "After email verification, you can apply to become a vendor in your dashboard.",
+            });
+          }
+        }
       }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -90,14 +147,14 @@ const Auth = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-primary">
-            {isResetPassword ? 'Reset Password' : (isLogin ? 'Welcome Back' : 'Create Account')}
+            {isResetPassword ? 'Reset Password' : (isLogin ? 'Welcome Back' : 'Join SmartPortal')}
           </CardTitle>
           <CardDescription>
             {isResetPassword 
               ? 'Enter your email to receive password reset instructions'
               : isLogin 
                 ? 'Sign in to your SmartPortal account' 
-                : 'Join SmartPortal and start ordering'
+                : 'Create your account and start your journey'
             }
           </CardDescription>
         </CardHeader>
@@ -137,7 +194,7 @@ const Auth = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && !isResetPassword && (
               <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
+                <Label htmlFor="fullName">Full Name *</Label>
                 <Input
                   id="fullName"
                   type="text"
@@ -148,8 +205,9 @@ const Auth = () => {
                 />
               </div>
             )}
+            
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Email Address *</Label>
               <Input
                 id="email"
                 type="email"
@@ -159,9 +217,10 @@ const Auth = () => {
                 placeholder="Enter your email"
               />
             </div>
+            
             {!isResetPassword && (
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Password *</Label>
                 <Input
                   id="password"
                   type="password"
@@ -173,15 +232,51 @@ const Auth = () => {
                 />
               </div>
             )}
+
+            {!isLogin && !isResetPassword && (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number (Optional)</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Enter your phone number"
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <Label>I want to join as: *</Label>
+                  <RadioGroup value={role} onValueChange={setRole}>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="customer" id="customer" />
+                      <Label htmlFor="customer">Buyer/Customer</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="vendor" id="vendor" />
+                      <Label htmlFor="vendor">Vendor/Restaurant Owner</Label>
+                    </div>
+                  </RadioGroup>
+                  <p className="text-xs text-muted-foreground">
+                    {role === 'vendor' 
+                      ? 'You can apply to become a vendor after registration.'
+                      : 'Browse and order from amazing restaurants and vendors.'
+                    }
+                  </p>
+                </div>
+              </>
+            )}
+
             <Button
               type="submit"
               className="w-full"
               disabled={loading}
               variant="food"
             >
-              {loading ? 'Loading...' : 
+              {loading ? 'Processing...' : 
                 isResetPassword ? 'Send Reset Email' :
-                (isLogin ? 'Sign In' : 'Sign Up')
+                (isLogin ? 'Sign In' : 'Create Account')
               }
             </Button>
           </form>

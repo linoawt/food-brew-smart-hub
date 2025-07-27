@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,6 +10,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Products from "./pages/Products";
 import Vendors from "./pages/Vendors";
+import SearchResults from "./pages/SearchResults";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
@@ -33,6 +35,7 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/vendors" element={<Vendors />} />
               <Route path="/vendor/:vendorId" element={<Products />} />
+              <Route path="/search" element={<SearchResults />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/checkout" element={
                 <ProtectedRoute>
