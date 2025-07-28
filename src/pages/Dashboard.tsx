@@ -25,14 +25,14 @@ const Dashboard = () => {
     }
   };
 
-  const getDashboardTitle = () => {
+const getDashboardTitle = () => {
     switch (profile.role) {
       case 'admin':
         return 'Admin Dashboard';
       case 'vendor':
         return 'Vendor Dashboard';
       default:
-        return 'My Dashboard';
+        return 'Buyer Dashboard';
     }
   };
 
@@ -47,8 +47,8 @@ const Dashboard = () => {
             {profile.role === 'admin' 
               ? 'Manage your platform and view analytics'
               : profile.role === 'vendor'
-              ? 'Manage your business and orders'
-              : 'View your orders and manage your account'
+              ? 'Manage your business, products and orders'
+              : 'Browse restaurants, place orders and track deliveries'
             }
           </p>
         </div>
