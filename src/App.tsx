@@ -15,7 +15,6 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import Dashboard from "./pages/Dashboard";
-import UserDashboard from "./pages/UserDashboard";
 import VendorRegistration from "./pages/VendorRegistration";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
@@ -45,11 +44,6 @@ const App = () => (
               <Route path="/order-confirmation/:orderId" element={
                 <ProtectedRoute>
                   <OrderConfirmation />
-                </ProtectedRoute>
-              } />
-              <Route path="/my-dashboard" element={
-                <ProtectedRoute>
-                  <UserDashboard />
                 </ProtectedRoute>
               } />
               <Route path="/dashboard" element={

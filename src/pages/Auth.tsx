@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,11 +21,12 @@ const Auth = () => {
   const [role, setRole] = useState('customer');
   const [loading, setLoading] = useState(false);
   const { signIn, signUp, user } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   // Redirect if already logged in
   if (user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,18 +55,7 @@ const Auth = () => {
       } else if (isLogin) {
         const result = await signIn(email, password);
         if (!result.error) {
-          // Redirect based on role after successful login
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
-            .single();
-          
-          if (profile?.role === 'vendor') {
-            window.location.href = '/dashboard';
-          } else {
-            window.location.href = '/';
-          }
+          navigate('/dashboard');
         }
       } else {
         // Enhanced signup with role and phone
@@ -93,14 +83,7 @@ const Auth = () => {
             title: "Success",
             description: "Account created successfully! Please check your email to verify your account.",
           });
-          
-          // Redirect based on role
-          if (role === 'vendor') {
-            toast({
-              title: "Vendor Registration",
-              description: "After email verification, you can apply to become a vendor in your dashboard.",
-            });
-          }
+          setIsLogin(true);
         }
       }
     } catch (error: any) {
