@@ -54,18 +54,12 @@ const Auth = () => {
       } else if (isLogin) {
         const result = await signIn(email, password);
         if (!result.error) {
-          // Redirect based on role after successful login
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
-            .single();
-          
-          if (profile?.role === 'vendor') {
-            window.location.href = '/dashboard';
-          } else {
-            window.location.href = '/';
-          }
+          toast({
+            title: "Success",
+            description: "Welcome back!",
+          });
+          // Let the auth context handle routing based on profile
+          window.location.href = '/';
         }
       } else {
         // Enhanced signup with role and phone

@@ -6,7 +6,16 @@ import VendorDashboard from '@/components/VendorDashboard';
 import BuyerDashboard from '@/components/BuyerDashboard';
 
 const Dashboard = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, loading } = useAuth();
+
+  // Show loading while auth is being determined
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   // Redirect if not authenticated
   if (!user || !profile) {
