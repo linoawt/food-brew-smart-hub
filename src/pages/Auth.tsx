@@ -58,8 +58,8 @@ const Auth = () => {
             title: "Success",
             description: "Welcome back!",
           });
-          // Let the auth context handle routing based on profile
-          window.location.href = '/';
+          // Redirect to dashboard for role-based routing
+          window.location.href = '/dashboard';
         }
       } else {
         // Enhanced signup with role and phone

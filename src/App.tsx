@@ -17,6 +17,7 @@ import OrderConfirmation from "./pages/OrderConfirmation";
 import Dashboard from "./pages/Dashboard";
 import UserDashboard from "./pages/UserDashboard";
 import VendorRegistration from "./pages/VendorRegistration";
+import AdminLogin from "./pages/AdminLogin";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 
@@ -33,6 +34,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/vendors" element={<Vendors />} />
               <Route path="/vendor/:vendorId" element={<Products />} />
               <Route path="/search" element={<SearchResults />} />
@@ -57,13 +59,18 @@ const App = () => (
                   <Dashboard />
                 </ProtectedRoute>
               } />
-              <Route path="/vendor/dashboard" element={
-                <ProtectedRoute>
+              <Route path="/admin/dashboard" element={
+                <ProtectedRoute requiredRole={['admin']}>
                   <Dashboard />
                 </ProtectedRoute>
               } />
-              <Route path="/buyer/dashboard" element={
-                <ProtectedRoute>
+              <Route path="/vendor/dashboard" element={
+                <ProtectedRoute requiredRole={['vendor']}>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/customer/dashboard" element={
+                <ProtectedRoute requiredRole={['customer']}>
                   <Dashboard />
                 </ProtectedRoute>
               } />
