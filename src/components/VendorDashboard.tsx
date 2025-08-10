@@ -97,6 +97,9 @@ const VendorDashboard = () => {
     phone: profile?.phone || ''
   });
 
+  // Debug log to ensure this is the vendor dashboard
+  console.log('VendorDashboard loaded for user:', profile?.role);
+
   useEffect(() => {
     fetchVendorData();
   }, [user]);

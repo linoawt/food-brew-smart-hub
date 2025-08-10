@@ -24,6 +24,8 @@ const Dashboard = () => {
 
   // Route to appropriate dashboard based on role
   const renderDashboard = () => {
+    console.log('Rendering dashboard for role:', profile.role);
+    
     switch (profile.role) {
       case 'admin':
         return <AdminDashboard />;
@@ -32,6 +34,7 @@ const Dashboard = () => {
       case 'customer':
         return <BuyerDashboard />;
       default:
+        console.log('Unknown role, defaulting to buyer dashboard');
         return <BuyerDashboard />;
     }
   };
