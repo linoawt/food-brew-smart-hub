@@ -59,8 +59,8 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [newCategory, setNewCategory] = useState({ name: '', description: '', image_url: '' });
 
-  // Debug log to ensure this is the admin dashboard
-  console.log('AdminDashboard loaded');
+  // Debug log to verify this is ADMIN dashboard
+  console.log('🔧 ADMIN DASHBOARD LOADED - Admin Control Panel');
 
   useEffect(() => {
     fetchData();
