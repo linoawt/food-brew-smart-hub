@@ -81,8 +81,8 @@ const BuyerDashboard = () => {
     address: profile?.address || ''
   });
 
-  // Debug log to ensure this is the buyer dashboard
-  console.log('BuyerDashboard loaded for user:', profile?.role);
+  // Debug log to verify this is BUYER dashboard
+  console.log('🛒 BUYER DASHBOARD LOADED - Customer Shopping Panel');
 
   useEffect(() => {
     fetchUserData();

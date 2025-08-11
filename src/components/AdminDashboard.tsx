@@ -210,10 +210,16 @@ const AdminDashboard = () => {
 
       toast({
         title: "User role updated",
-        description: "User role has been updated successfully",
+        description: `User role has been updated to ${newRole}. The user will need to refresh their browser to see the new dashboard.`,
+        duration: 5000,
       });
     } catch (error) {
       console.error('Error updating user role:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update user role",
+        variant: "destructive"
+      });
     }
   };
 
