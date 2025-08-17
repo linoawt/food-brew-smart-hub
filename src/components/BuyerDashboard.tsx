@@ -82,6 +82,9 @@ const BuyerDashboard = () => {
     address: profile?.address || ''
   });
 
+  // Debug log to verify this is BUYER dashboard
+  console.log('🛒 BUYER DASHBOARD LOADED - Customer Shopping Panel');
+
   useEffect(() => {
     fetchUserData();
   }, [user]);

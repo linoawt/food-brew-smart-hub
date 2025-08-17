@@ -55,7 +55,16 @@ const Auth = () => {
       } else if (isLogin) {
         const result = await signIn(email, password);
         if (!result.error) {
+ feature/dashboard-routing-fix
           navigate('/dashboard');
+
+          toast({
+            title: "Success",
+            description: "Welcome back!",
+          });
+          // Redirect to dashboard for role-based routing
+          window.location.href = '/dashboard';
+ main
         }
       } else {
         // Enhanced signup with role and phone

@@ -14,6 +14,11 @@ interface SearchResult {
   description?: string;
   image_url?: string;
   category?: string;
+  price?: number;
+  rating?: number;
+  delivery_time?: string;
+  vendor_id?: string;
+  vendor_name?: string;
 }
 
 interface SearchFunctionalityProps {
@@ -39,20 +44,26 @@ const SearchFunctionality = ({ onSearchResults, className }: SearchFunctionality
 
     setIsSearching(true);
     try {
-      // Search vendors
+      // Search vendors with better error handling
       const { data: vendors, error: vendorError } = await supabase
         .from('vendors')
-        .select('id, name, description, image_url, category')
+        .select('id, name, description, image_url, category, rating, delivery_time')
         .or(`name.ilike.%${query}%,description.ilike.%${query}%,category.ilike.%${query}%`)
         .eq('is_active', true)
+        .eq('approval_status', 'approved')
         .limit(10);
 
-      // Search products
+      // Search products with vendor details
       const { data: products, error: productError } = await supabase
         .from('products')
-        .select('id, name, description, image_url, category')
+        .select(`
+          id, name, description, image_url, category, price, vendor_id,
+          vendors!inner(name, is_active, approval_status)
+        `)
         .or(`name.ilike.%${query}%,description.ilike.%${query}%,category.ilike.%${query}%`)
         .eq('is_available', true)
+        .eq('vendors.is_active', true)
+        .eq('vendors.approval_status', 'approved')
         .limit(10);
 
       if (vendorError || productError) {
@@ -68,6 +79,8 @@ const SearchFunctionality = ({ onSearchResults, className }: SearchFunctionality
           description: vendor.description,
           image_url: vendor.image_url,
           category: vendor.category,
+          rating: vendor.rating,
+          delivery_time: vendor.delivery_time,
         })),
         ...(products || []).map(product => ({
           id: product.id,
@@ -76,6 +89,9 @@ const SearchFunctionality = ({ onSearchResults, className }: SearchFunctionality
           description: product.description,
           image_url: product.image_url,
           category: product.category,
+          price: product.price,
+          vendor_id: product.vendor_id,
+          vendor_name: product.vendors?.name,
         })),
       ];
 

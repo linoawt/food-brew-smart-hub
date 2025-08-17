@@ -97,6 +97,9 @@ const VendorDashboard = () => {
     phone: profile?.phone || ''
   });
 
+  // Debug log to verify this is VENDOR dashboard
+  console.log('🏪 VENDOR DASHBOARD LOADED - Business Management Panel');
+
   useEffect(() => {
     fetchVendorData();
   }, [user]);
