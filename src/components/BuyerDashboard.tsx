@@ -20,7 +20,8 @@ import {
   Package,
   Search,
   Filter,
-  Plus
+  Plus,
+  Bell
 } from 'lucide-react';
 
 interface Order {
@@ -280,11 +281,13 @@ const BuyerDashboard = () => {
       </div>
 
       <Tabs defaultValue="browse" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="browse">Browse Menu</TabsTrigger>
           <TabsTrigger value="orders">My Orders</TabsTrigger>
           <TabsTrigger value="favorites">Favorites</TabsTrigger>
           <TabsTrigger value="profile">Profile</TabsTrigger>
+          <TabsTrigger value="addresses">Addresses</TabsTrigger>
+          <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
 
         <TabsContent value="browse" className="space-y-6">
@@ -592,6 +595,34 @@ const BuyerDashboard = () => {
               <Button onClick={handleProfileUpdate}>
                 Update Profile
               </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="addresses" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Saved Addresses</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-8">
+                <MapPin className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                <p className="text-muted-foreground">Address management coming soon</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="notifications" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Notifications</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-8">
+                <Bell className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                <p className="text-muted-foreground">No notifications yet</p>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
