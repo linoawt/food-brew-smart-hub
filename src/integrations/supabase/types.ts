@@ -395,48 +395,7 @@ export type Database = {
       }
     }
     Views: {
-      admin_profiles_safe: {
-        Row: {
-          created_at: string | null
-          email_masked: string | null
-          full_name: string | null
-          id: string | null
-          phone_masked: string | null
-          role: string | null
-          updated_at: string | null
-          user_id: string | null
-          vendor_application_status: string | null
-          vendor_business_name: string | null
-          vendor_description: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          email_masked?: never
-          full_name?: string | null
-          id?: string | null
-          phone_masked?: never
-          role?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-          vendor_application_status?: string | null
-          vendor_business_name?: string | null
-          vendor_description?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          email_masked?: never
-          full_name?: string | null
-          id?: string | null
-          phone_masked?: never
-          role?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-          vendor_application_status?: string | null
-          vendor_business_name?: string | null
-          vendor_description?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       get_current_user_role: {
