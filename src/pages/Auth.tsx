@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,12 +21,11 @@ const Auth = () => {
   const [role, setRole] = useState('customer');
   const [loading, setLoading] = useState(false);
   const { signIn, signUp, user } = useAuth();
-  const navigate = useNavigate();
   const { toast } = useToast();
 
   // Redirect if already logged in
   if (user) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/" replace />;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,16 +54,12 @@ const Auth = () => {
       } else if (isLogin) {
         const result = await signIn(email, password);
         if (!result.error) {
- feature/dashboard-routing-fix
-          navigate('/dashboard');
-
           toast({
             title: "Success",
             description: "Welcome back!",
           });
           // Redirect to dashboard for role-based routing
           window.location.href = '/dashboard';
- main
         }
       } else {
         // Enhanced signup with role and phone
@@ -92,7 +87,14 @@ const Auth = () => {
             title: "Success",
             description: "Account created successfully! Please check your email to verify your account.",
           });
-          setIsLogin(true);
+          
+          // Redirect based on role
+          if (role === 'vendor') {
+            toast({
+              title: "Vendor Registration",
+              description: "After email verification, you can apply to become a vendor in your dashboard.",
+            });
+          }
         }
       }
     } catch (error: any) {
