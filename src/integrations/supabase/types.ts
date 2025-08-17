@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_audit_logs: {
+        Row: {
+          accessed_data: Json | null
+          action: string
+          admin_user_id: string
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          record_id: string | null
+          table_name: string
+          user_agent: string | null
+        }
+        Insert: {
+          accessed_data?: Json | null
+          action: string
+          admin_user_id: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          record_id?: string | null
+          table_name: string
+          user_agent?: string | null
+        }
+        Update: {
+          accessed_data?: Json | null
+          action?: string
+          admin_user_id?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          record_id?: string | null
+          table_name?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -359,12 +395,78 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      admin_profiles_safe: {
+        Row: {
+          created_at: string | null
+          email_masked: string | null
+          full_name: string | null
+          id: string | null
+          phone_masked: string | null
+          role: string | null
+          updated_at: string | null
+          user_id: string | null
+          vendor_application_status: string | null
+          vendor_business_name: string | null
+          vendor_description: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email_masked?: never
+          full_name?: string | null
+          id?: string | null
+          phone_masked?: never
+          role?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vendor_application_status?: string | null
+          vendor_business_name?: string | null
+          vendor_description?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email_masked?: never
+          full_name?: string | null
+          id?: string | null
+          phone_masked?: never
+          role?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vendor_application_status?: string | null
+          vendor_business_name?: string | null
+          vendor_description?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_full_profile_admin: {
+        Args: { target_user_id: string }
+        Returns: {
+          address: string
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string
+          role: string
+          updated_at: string
+          user_id: string
+          vendor_application_status: string
+          vendor_business_name: string
+          vendor_description: string
+        }[]
+      }
+      log_admin_profile_access: {
+        Args: { profile_user_id: string }
+        Returns: undefined
+      }
+      verify_admin_access: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
       }
     }
     Enums: {
