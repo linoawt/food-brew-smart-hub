@@ -6,22 +6,36 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { useInputSanitization } from '@/hooks/useInputSanitization';
 import { Shield } from 'lucide-react';
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState('admin@homebrew.com');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { sanitizeEmail, checkRateLimit } = useInputSanitization();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Rate limiting check
+    if (!checkRateLimit('admin_login', 5, 900000)) { // 5 attempts per 15 minutes
+      toast({
+        title: "Too Many Attempts",
+        description: "Please wait 15 minutes before trying again.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setLoading(true);
 
     try {
-      const { error } = await signIn(email, password);
+      const sanitizedEmail = sanitizeEmail(email);
+      const { error } = await signIn(sanitizedEmail, password);
       
       if (error) {
         toast({
@@ -30,6 +44,8 @@ const AdminLogin = () => {
           variant: "destructive",
         });
       } else {
+        // Clear rate limit on successful login
+        localStorage.removeItem('rateLimit_admin_login');
         navigate('/dashboard');
       }
     } catch (error) {
@@ -63,10 +79,9 @@ const AdminLogin = () => {
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@homebrew.com"
+                onChange={(e) => setEmail(e.target.value.trim())}
+                placeholder="Enter admin email"
                 required
-                disabled
               />
             </div>
             <div className="space-y-2">
@@ -90,13 +105,9 @@ const AdminLogin = () => {
           </form>
           
           <div className="mt-6 p-4 bg-muted rounded-lg">
-            <h3 className="font-semibold text-sm mb-2">Test Credentials:</h3>
-            <p className="text-sm text-muted-foreground">
-              Email: admin@homebrew.com<br />
-              Password: AdminPass123!
-            </p>
-            <p className="text-xs text-muted-foreground mt-2">
-              Note: You'll need to register this admin account first in the regular signup.
+            <h3 className="font-semibold text-sm mb-2">Admin Access</h3>
+            <p className="text-xs text-muted-foreground">
+              Use your registered admin credentials to access the dashboard.
             </p>
           </div>
         </CardContent>
