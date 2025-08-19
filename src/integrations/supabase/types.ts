@@ -266,6 +266,7 @@ export type Database = {
           vendor_application_status: string | null
           vendor_business_name: string | null
           vendor_description: string | null
+          vendor_id: string | null
         }
         Insert: {
           address?: string | null
@@ -280,6 +281,7 @@ export type Database = {
           vendor_application_status?: string | null
           vendor_business_name?: string | null
           vendor_description?: string | null
+          vendor_id?: string | null
         }
         Update: {
           address?: string | null
@@ -294,8 +296,17 @@ export type Database = {
           vendor_application_status?: string | null
           vendor_business_name?: string | null
           vendor_description?: string | null
+          vendor_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reviews: {
         Row: {
