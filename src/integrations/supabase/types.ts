@@ -406,7 +406,51 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      admin_profiles_view: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string | null
+          phone: string | null
+          role: string | null
+          updated_at: string | null
+          user_id: string | null
+          vendor_application_status: string | null
+          vendor_business_name: string | null
+          vendor_description: string | null
+        }
+        Insert: {
+          address?: never
+          created_at?: string | null
+          email?: never
+          full_name?: string | null
+          id?: string | null
+          phone?: never
+          role?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vendor_application_status?: string | null
+          vendor_business_name?: string | null
+          vendor_description?: string | null
+        }
+        Update: {
+          address?: never
+          created_at?: string | null
+          email?: never
+          full_name?: string | null
+          id?: string | null
+          phone?: never
+          role?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          vendor_application_status?: string | null
+          vendor_business_name?: string | null
+          vendor_description?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_current_user_role: {
@@ -430,11 +474,44 @@ export type Database = {
           vendor_description: string
         }[]
       }
+      get_profile_masked_data: {
+        Args: { target_user_id: string }
+        Returns: {
+          created_at: string
+          email_masked: string
+          full_name: string
+          id: string
+          phone_masked: string
+          role: string
+          user_id: string
+        }[]
+      }
+      get_profile_sensitive_data: {
+        Args: { target_user_id: string }
+        Returns: {
+          address: string
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string
+          role: string
+          user_id: string
+        }[]
+      }
+      log_admin_login_success: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       log_admin_profile_access: {
         Args: { profile_user_id: string }
         Returns: undefined
       }
       verify_admin_access: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      verify_admin_access_enhanced: {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }

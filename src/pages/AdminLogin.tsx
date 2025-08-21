@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useInputSanitization } from '@/hooks/useInputSanitization';
+import { supabase } from '@/integrations/supabase/client';
 import { Shield } from 'lucide-react';
 
 const AdminLogin = () => {
@@ -46,6 +47,14 @@ const AdminLogin = () => {
       } else {
         // Clear rate limit on successful login
         localStorage.removeItem('rateLimit_admin_login');
+        
+        // Log successful admin login for enhanced security tracking
+        try {
+          await supabase.rpc('log_admin_login_success');
+        } catch (logError) {
+          console.warn('Failed to log admin login:', logError);
+        }
+        
         navigate('/dashboard');
       }
     } catch (error) {
