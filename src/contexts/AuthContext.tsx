@@ -142,7 +142,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -154,6 +154,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         variant: "destructive",
       });
     } else {
+      // Check if user is admin and log the successful login for security tracking
+      if (data.user) {
+        setTimeout(async () => {
+          try {
+            const { data: profileData } = await supabase
+              .from('profiles')
+              .select('role')
+              .eq('user_id', data.user.id)
+              .single();
+              
+            if (profileData?.role === 'admin') {
+              // Log admin login success for enhanced security tracking
+              await supabase.rpc('log_admin_login_success');
+            }
+          } catch (error) {
+            console.error('Error logging admin login:', error);
+          }
+        }, 0);
+      }
+      
       toast({
         title: "Welcome back!",
         description: "You have successfully signed in.",
