@@ -65,14 +65,20 @@ const Header = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => navigate('/my-dashboard')}>
+                  <DropdownMenuItem onClick={() => navigate('/dashboard')}>
                     <User className="w-4 h-4 mr-2" />
-                    My Dashboard
+                    Dashboard
                   </DropdownMenuItem>
-                  {profile?.role && ['admin', 'vendor'].includes(profile.role) && (
-                    <DropdownMenuItem onClick={() => navigate('/dashboard')}>
+                  {profile?.role === 'admin' && (
+                    <DropdownMenuItem onClick={() => navigate('/admin/dashboard')}>
                       <Settings className="w-4 h-4 mr-2" />
-                      {profile.role === 'admin' ? 'Admin Panel' : 'Vendor Dashboard'}
+                      Admin Panel
+                    </DropdownMenuItem>
+                  )}
+                  {profile?.role === 'vendor' && (
+                    <DropdownMenuItem onClick={() => navigate('/vendor/dashboard')}>
+                      <Settings className="w-4 h-4 mr-2" />
+                      Vendor Dashboard
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuItem onClick={handleSignOut}>

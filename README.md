@@ -64,6 +64,28 @@ This project is built with:
 
 Simply open [Lovable](https://lovable.dev/projects/60b11ff2-e904-4d88-81b1-8511c3416af8) and click on Share -> Publish.
 
+## Admin Access Credentials
+
+To access the admin dashboard, you'll need to create an admin user account:
+
+### Creating an Admin Account
+1. Go to `/auth` and sign up with any email/password
+2. After signup, you'll need to manually update your role to 'admin' in the Supabase dashboard
+3. Navigate to: Authentication > Users > Find your user > Edit
+4. Or use the SQL editor to run: `UPDATE profiles SET role = 'admin' WHERE email = 'your-email@example.com';`
+
+### Test Admin Credentials
+For testing purposes, you can create an admin account with:
+- **Email**: admin@smartportal.com
+- **Password**: Admin123!@#
+- After signup, update the role to 'admin' as described above
+
+### Access URLs
+- **Admin Dashboard**: `/admin/dashboard`
+- **Vendor Dashboard**: `/vendor/dashboard` 
+- **Customer Dashboard**: `/customer/dashboard`
+- **Admin Login**: `/admin/login`
+
 ## Can I connect a custom domain to my Lovable project?
 
 Yes, you can!

@@ -1,9 +1,10 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/Header';
 import AdminDashboard from '@/components/AdminDashboard';
 import VendorDashboard from '@/components/VendorDashboard';
 import BuyerDashboard from '@/components/BuyerDashboard';
+import RoleBasedRedirect from '@/components/RoleBasedRedirect';
 
 const Dashboard = () => {
   const { user, profile, loading } = useAuth();
@@ -66,28 +67,30 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <div className="container mx-auto px-4 py-12">
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">{getDashboardTitle()}</h1>
-              <p className="text-muted-foreground mt-2">
-                {getDashboardDescription()}
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-muted-foreground">Welcome back,</p>
-              <p className="font-semibold">{profile.full_name || profile.email}</p>
+    <RoleBasedRedirect>
+      <div className="min-h-screen bg-background">
+        <Header />
+        
+        <div className="container mx-auto px-4 py-12">
+          <div className="mb-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold">{getDashboardTitle()}</h1>
+                <p className="text-muted-foreground mt-2">
+                  {getDashboardDescription()}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-muted-foreground">Welcome back,</p>
+                <p className="font-semibold">{profile.full_name || profile.email}</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        {renderDashboard()}
+          {renderDashboard()}
+        </div>
       </div>
-    </div>
+    </RoleBasedRedirect>
   );
 };
 
