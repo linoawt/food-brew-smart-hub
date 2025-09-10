@@ -46,7 +46,8 @@ interface User {
   id: string;
   user_id: string;
   full_name: string;
-  email: string;
+  email_masked: string; // Now using masked email for security
+  phone_masked: string; // Now using masked phone for security
   role: string;
   created_at: string;
 }
@@ -81,11 +82,18 @@ const AdminDashboard = () => {
         .select('*')
         .order('name');
 
-      // Fetch all users
-      const { data: usersData } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false });
+      // Fetch users data using secure function instead of vulnerable view
+      const { data: usersData, error: usersError } = await supabase
+        .rpc('get_admin_profiles_list');
+
+      if (usersError) {
+        console.error('Error fetching users:', usersError);
+        toast({
+          title: "Error",
+          description: "Failed to load users data",
+          variant: "destructive",
+        });
+      }
 
       setApplications(applicationsData || []);
       setCategories(categoriesData || []);
@@ -374,7 +382,8 @@ const AdminDashboard = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
+                <TableHead>Email (Masked)</TableHead>
+                <TableHead>Phone (Masked)</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Joined</TableHead>
                 <TableHead>Actions</TableHead>
@@ -384,7 +393,8 @@ const AdminDashboard = () => {
               {users.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell>{user.full_name || 'N/A'}</TableCell>
-                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.email_masked}</TableCell>
+                  <TableCell>{user.phone_masked}</TableCell>
                   <TableCell>
                     <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>
                       {user.role}

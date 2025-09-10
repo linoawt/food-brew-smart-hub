@@ -406,53 +406,25 @@ export type Database = {
       }
     }
     Views: {
-      admin_profiles_view: {
-        Row: {
-          address: string | null
-          created_at: string | null
-          email: string | null
-          full_name: string | null
-          id: string | null
-          phone: string | null
-          role: string | null
-          updated_at: string | null
-          user_id: string | null
-          vendor_application_status: string | null
-          vendor_business_name: string | null
-          vendor_description: string | null
-        }
-        Insert: {
-          address?: never
-          created_at?: string | null
-          email?: never
-          full_name?: string | null
-          id?: string | null
-          phone?: never
-          role?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-          vendor_application_status?: string | null
-          vendor_business_name?: string | null
-          vendor_description?: string | null
-        }
-        Update: {
-          address?: never
-          created_at?: string | null
-          email?: never
-          full_name?: string | null
-          id?: string | null
-          phone?: never
-          role?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-          vendor_application_status?: string | null
-          vendor_business_name?: string | null
-          vendor_description?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
+      get_admin_profiles_list: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          created_at: string
+          email_masked: string
+          full_name: string
+          id: string
+          phone_masked: string
+          role: string
+          updated_at: string
+          user_id: string
+          vendor_application_status: string
+          vendor_business_name: string
+          vendor_description: string
+        }[]
+      }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: string
