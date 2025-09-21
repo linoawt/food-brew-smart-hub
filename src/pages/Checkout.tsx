@@ -9,6 +9,8 @@ import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { formatNaira, sanitizeNigerianPhone, isValidNigerianPhone } from '@/lib/utils';
+import PaymentGateway from '@/components/PaymentGateway';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -27,6 +29,7 @@ const Checkout = () => {
   
   const [vendor, setVendor] = useState<Vendor | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
   const [formData, setFormData] = useState({
     phone: '',
     delivery_address: '',
@@ -69,13 +72,13 @@ const Checkout = () => {
     });
   };
 
-  const handlePlaceOrder = async () => {
+  const handleProceedToPayment = () => {
     if (!user || !vendor) return;
 
     if (vendor && subtotal < vendor.min_order) {
       toast({
         title: "Minimum order not met",
-        description: `Minimum order amount is $${vendor.min_order.toFixed(2)}`,
+        description: `Minimum order amount is ${formatNaira(vendor.min_order)}`,
         variant: "destructive"
       });
       return;
@@ -90,6 +93,22 @@ const Checkout = () => {
       return;
     }
 
+    // Validate Nigerian phone number
+    if (!isValidNigerianPhone(formData.phone)) {
+      toast({
+        title: "Invalid phone number",
+        description: "Please enter a valid Nigerian phone number (e.g., 0803 123 4567)",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setShowPayment(true);
+  };
+
+  const handlePaymentComplete = async (paymentMethod: string, paymentReference: string) => {
+    if (!user || !vendor) return;
+    
     setLoading(true);
 
     try {
@@ -101,10 +120,10 @@ const Checkout = () => {
           vendor_id: vendor.id,
           total_amount: total,
           delivery_fee: deliveryFee,
-          phone: formData.phone,
+          phone: sanitizeNigerianPhone(formData.phone),
           delivery_address: formData.delivery_address,
           status: 'pending',
-          payment_status: 'pending'
+          payment_status: paymentMethod === 'cash_on_delivery' ? 'cash_on_delivery' : 'pending_verification'
         })
         .select()
         .single();
@@ -131,7 +150,7 @@ const Checkout = () => {
 
       toast({
         title: "Order placed successfully!",
-        description: `Order #${order.id.slice(0, 8)} has been placed.`
+        description: `Order #${order.id.slice(0, 8)} has been placed. Payment reference: ${paymentReference}`
       });
 
       navigate(`/order-confirmation/${order.id}`);
@@ -145,6 +164,10 @@ const Checkout = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePaymentCancel = () => {
+    setShowPayment(false);
   };
 
   if (!vendor || items.length === 0) {
@@ -171,105 +194,116 @@ const Checkout = () => {
       <div className="container mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold mb-8">Checkout</h1>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Order Details */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Order Details</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="phone">Phone Number *</Label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="Enter your phone number"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="delivery_address">Delivery Address *</Label>
-                  <Textarea
-                    id="delivery_address"
-                    name="delivery_address"
-                    value={formData.delivery_address}
-                    onChange={handleInputChange}
-                    placeholder="Enter your full delivery address"
-                    rows={3}
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="notes">Order Notes (Optional)</Label>
-                  <Textarea
-                    id="notes"
-                    name="notes"
-                    value={formData.notes}
-                    onChange={handleInputChange}
-                    placeholder="Any special instructions..."
-                    rows={2}
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Order Summary */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Order Summary</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="pb-4 border-b">
-                <p className="font-medium">{vendor.name}</p>
-                {subtotal < vendor.min_order && (
-                  <p className="text-sm text-destructive">
-                    Minimum order: ${vendor.min_order.toFixed(2)}
-                  </p>
-                )}
-              </div>
-              
-              <div className="space-y-2">
-                {items.map((item) => (
-                  <div key={item.product.id} className="flex justify-between text-sm">
-                    <span>{item.product.name} × {item.quantity}</span>
-                    <span>${(item.product.price * item.quantity).toFixed(2)}</span>
+        {!showPayment ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Order Details */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Order Details</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="phone">Phone Number *</Label>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="e.g., 0803 123 4567 or +234 803 123 4567"
+                      required
+                    />
                   </div>
-                ))}
-              </div>
-              
-              <div className="space-y-2 pt-4 border-t">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  
+                  <div>
+                    <Label htmlFor="delivery_address">Delivery Address *</Label>
+                    <Textarea
+                      id="delivery_address"
+                      name="delivery_address"
+                      value={formData.delivery_address}
+                      onChange={handleInputChange}
+                      placeholder="Enter your full delivery address including landmarks"
+                      rows={3}
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="notes">Order Notes (Optional)</Label>
+                    <Textarea
+                      id="notes"
+                      name="notes"
+                      value={formData.notes}
+                      onChange={handleInputChange}
+                      placeholder="Any special instructions..."
+                      rows={2}
+                    />
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span>Delivery Fee</span>
-                  <span>${deliveryFee.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between font-semibold text-lg border-t pt-2">
-                  <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
-                </div>
-              </div>
+              </CardContent>
+            </Card>
 
-              <Button
-                onClick={handlePlaceOrder}
-                className="w-full"
-                variant="food"
-                disabled={loading || subtotal < vendor.min_order}
-              >
-                {loading ? 'Placing Order...' : `Place Order - $${total.toFixed(2)}`}
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+            {/* Order Summary */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Order Summary</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="pb-4 border-b">
+                  <p className="font-medium">{vendor.name}</p>
+                  {subtotal < vendor.min_order && (
+                    <p className="text-sm text-destructive">
+                      Minimum order: {formatNaira(vendor.min_order)}
+                    </p>
+                  )}
+                </div>
+                
+                <div className="space-y-2">
+                  {items.map((item) => (
+                    <div key={item.product.id} className="flex justify-between text-sm">
+                      <span>{item.product.name} × {item.quantity}</span>
+                      <span>{formatNaira(item.product.price * item.quantity)}</span>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="space-y-2 pt-4 border-t">
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>{formatNaira(subtotal)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Delivery Fee</span>
+                    <span>{formatNaira(deliveryFee)}</span>
+                  </div>
+                  <div className="flex justify-between font-semibold text-lg border-t pt-2">
+                    <span>Total</span>
+                    <span>{formatNaira(total)}</span>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={handleProceedToPayment}
+                  className="w-full"
+                  variant="food"
+                  disabled={loading || subtotal < vendor.min_order}
+                >
+                  Proceed to Payment - {formatNaira(total)}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        ) : (
+          <div className="max-w-2xl mx-auto">
+            <PaymentGateway
+              amount={total}
+              onPaymentComplete={handlePaymentComplete}
+              onPaymentCancel={handlePaymentCancel}
+              loading={loading}
+            />
+          </div>
+        )}
       </div>
 
       <Footer />

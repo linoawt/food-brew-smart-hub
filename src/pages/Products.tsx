@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Star, Clock, Truck, Plus } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
+import { formatNaira } from '@/lib/utils';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -128,7 +129,7 @@ const Products = () => {
                 </div>
                 <div className="flex items-center gap-1">
                   <Truck className="w-4 h-4 text-muted-foreground" />
-                  <span>${vendor.delivery_fee} delivery</span>
+                  <span>{formatNaira(vendor.delivery_fee)} delivery</span>
                 </div>
               </div>
             </div>
@@ -157,7 +158,7 @@ const Products = () => {
                 <CardDescription className="mb-4">{product.description}</CardDescription>
                 <div className="flex justify-between items-center">
                   <span className="text-2xl font-bold text-primary">
-                    ${product.price.toFixed(2)}
+                    {formatNaira(product.price)}
                   </span>
                   <Button
                     onClick={() => handleAddToCart(product)}

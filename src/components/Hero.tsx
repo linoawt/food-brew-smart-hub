@@ -35,15 +35,15 @@ const Hero = () => {
       <div className="relative z-10 container mx-auto px-4 text-center">
         <div className="max-w-4xl mx-auto animate-fade-in">
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-            Savor Every
-            <span className="bg-gradient-to-r from-orange-400 to-yellow-300 bg-clip-text text-transparent block">
-              Moment
+            Taste The Best of
+            <span className="bg-gradient-to-r from-green-400 to-yellow-300 bg-clip-text text-transparent block">
+              Nigeria
             </span>
           </h1>
           
           <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Discover exceptional food and craft beverages from the finest local vendors. 
-            Fresh ingredients, bold flavors, unforgettable experiences.
+            Discover authentic Nigerian cuisine and premium beverages from local vendors. 
+            From jollof rice to craft beers, experience the rich flavors of Nigeria.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">

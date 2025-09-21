@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { formatNaira } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -262,7 +263,7 @@ const BuyerDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${orders.reduce((sum, order) => sum + parseFloat(order.total_amount.toString()), 0).toFixed(2)}
+              {formatNaira(orders.reduce((sum, order) => sum + parseFloat(order.total_amount.toString()), 0))}
             </div>
             <p className="text-xs text-muted-foreground">Lifetime spending</p>
           </CardContent>

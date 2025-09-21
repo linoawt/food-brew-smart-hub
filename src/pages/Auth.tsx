@@ -134,14 +134,14 @@ const Auth = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-primary">
-            {isResetPassword ? 'Reset Password' : (isLogin ? 'Welcome Back' : 'Join SmartPortal')}
+            {isResetPassword ? 'Reset Password' : (isLogin ? 'Welcome Back' : 'Join NaijaFeast')}
           </CardTitle>
           <CardDescription>
             {isResetPassword 
               ? 'Enter your email to receive password reset instructions'
               : isLogin 
-                ? 'Sign in to your SmartPortal account' 
-                : 'Create your account and start your journey'
+                ? 'Sign in to your NaijaFeast account' 
+                : 'Create your account and discover Nigerian cuisine'
             }
           </CardDescription>
         </CardHeader>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { formatNaira } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -426,7 +427,7 @@ const VendorDashboard = () => {
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">${stats.totalRevenue.toFixed(2)}</div>
+                <div className="text-2xl font-bold">{formatNaira(stats.totalRevenue)}</div>
                 <p className="text-xs text-muted-foreground">Total revenue</p>
               </CardContent>
             </Card>
@@ -438,7 +439,7 @@ const VendorDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  ${stats.totalOrders > 0 ? (stats.totalRevenue / stats.totalOrders).toFixed(2) : '0.00'}
+                  {stats.totalOrders > 0 ? formatNaira(stats.totalRevenue / stats.totalOrders) : formatNaira(0)}
                 </div>
                 <p className="text-xs text-muted-foreground">Average order value</p>
               </CardContent>

@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
+import { formatNaira } from '@/lib/utils';
 import Header from '@/components/Header';
 
 interface SearchResult {
@@ -171,7 +172,7 @@ const SearchResults = () => {
                     ) : (
                       <div className="flex items-center justify-between">
                         <span className="text-lg font-semibold text-primary">
-                          ${result.price?.toFixed(2)}
+                          {result.price ? formatNaira(result.price) : 'Price not available'}
                         </span>
                         <div className="flex items-center gap-1 text-sm text-muted-foreground">
                           <MapPin className="w-4 h-4" />

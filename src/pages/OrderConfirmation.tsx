@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Clock, Package, Truck } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { formatNaira } from '@/lib/utils';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -169,7 +170,7 @@ const OrderConfirmation = () => {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Total Amount</p>
-                  <p className="font-medium">${order.total_amount.toFixed(2)}</p>
+                  <p className="font-medium">{formatNaira(order.total_amount)}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Delivery Address</p>
@@ -225,11 +226,11 @@ const OrderConfirmation = () => {
                     <div className="flex-1">
                       <h4 className="font-medium">{item.product.name}</h4>
                       <p className="text-sm text-muted-foreground">
-                        ${item.unit_price.toFixed(2)} × {item.quantity}
+                        {formatNaira(item.unit_price)} × {item.quantity}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium">${item.total_price.toFixed(2)}</p>
+                      <p className="font-medium">{formatNaira(item.total_price)}</p>
                     </div>
                   </div>
                 ))}
@@ -237,15 +238,15 @@ const OrderConfirmation = () => {
                 <div className="pt-4 border-t">
                   <div className="flex justify-between mb-2">
                     <span>Subtotal</span>
-                    <span>${(order.total_amount - order.delivery_fee).toFixed(2)}</span>
+                    <span>{formatNaira(order.total_amount - order.delivery_fee)}</span>
                   </div>
                   <div className="flex justify-between mb-2">
                     <span>Delivery Fee</span>
-                    <span>${order.delivery_fee.toFixed(2)}</span>
+                    <span>{formatNaira(order.delivery_fee)}</span>
                   </div>
                   <div className="flex justify-between font-semibold text-lg">
                     <span>Total</span>
-                    <span>${order.total_amount.toFixed(2)}</span>
+                    <span>{formatNaira(order.total_amount)}</span>
                   </div>
                 </div>
               </div>

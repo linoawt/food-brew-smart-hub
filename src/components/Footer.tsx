@@ -64,16 +64,16 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
               <div className="w-10 h-10 bg-gradient-hero rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg">SP</span>
+                <span className="text-white font-bold text-lg">NF</span>
               </div>
               <div>
-                <h3 className="text-xl font-bold text-foreground">SmartPortal</h3>
-                <p className="text-sm text-muted-foreground">Food & Brewery Hub</p>
+                <h3 className="text-xl font-bold text-foreground">NaijaFeast</h3>
+                <p className="text-sm text-muted-foreground">Nigerian Food & Brewery Hub</p>
               </div>
             </div>
             <p className="text-muted-foreground mb-6 max-w-md">
-              Your gateway to exceptional food and beverages. Connecting you with the finest local vendors 
-              for fresh ingredients, bold flavors, and unforgettable dining experiences.
+              Your gateway to authentic Nigerian cuisine and beverages. Connecting you with the finest local vendors 
+              for traditional dishes, modern fusion, and quality beverages across Nigeria.
             </p>
             <div className="flex space-x-4">
               <Button 
@@ -156,15 +156,15 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-2 text-muted-foreground">
                 <Phone className="w-4 h-4" />
-                <span className="text-sm">+1 (555) 123-4567</span>
+                <span className="text-sm">+234 (0) 700-FEAST</span>
               </div>
               <div className="flex items-center space-x-2 text-muted-foreground">
                 <Mail className="w-4 h-4" />
-                <span className="text-sm">hello@smartportal.com</span>
+                <span className="text-sm">hello@naijafeast.com</span>
               </div>
               <div className="flex items-center space-x-2 text-muted-foreground">
                 <MapPin className="w-4 h-4" />
-                <span className="text-sm">123 Food Street, City</span>
+                <span className="text-sm">Lagos, Nigeria</span>
               </div>
             </div>
           </div>
@@ -195,7 +195,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="border-t border-border pt-6 mt-6 text-center">
           <p className="text-sm text-muted-foreground">
-            © 2024 SmartPortal. All rights reserved. | Privacy Policy | Terms of Service
+            © 2024 NaijaFeast. All rights reserved. | Privacy Policy | Terms of Service
           </p>
         </div>
       </div>
